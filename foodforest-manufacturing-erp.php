@@ -67,11 +67,11 @@ require_once $autoload;
 |--------------------------------------------------------------------------
 */
 
-use FoodForestERP\Core\Application;
+use FoodForestERP\Core\Plugin;
 
 try {
 
-    Application::boot();
+    Plugin::instance()->boot();
 
 } catch (Throwable $e) {
 
