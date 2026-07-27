@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
 /**
  * Main Application Class.
  *
- * Boots the FFME plugin and registers all core services.
+ * Boots the FFME application and registers core WordPress hooks.
  *
  * @package FoodForestERP
  * @since   0.2.0
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 final class Application
 {
     /**
-     * Application instance.
+     * Singleton instance.
      *
      * @var Application|null
      */
@@ -37,17 +37,15 @@ final class Application
      */
     private function __construct()
     {
-        $this->version = defined('FFME_VERSION')
-            ? FFME_VERSION
-            : '0.2.0';
+        $this->version = FFME_VERSION;
     }
 
     /**
-     * Get application instance.
+     * Get singleton instance.
      *
      * @return Application
      */
-    public static function instance(): Application
+    public static function instance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -57,13 +55,13 @@ final class Application
     }
 
     /**
-     * Boot application.
+     * Boot the application.
      *
      * @return void
      */
-    public static function boot(): void
+    public function boot(): void
     {
-        self::instance()->registerHooks();
+        $this->registerHooks();
     }
 
     /**
@@ -75,22 +73,25 @@ final class Application
     {
         add_action(
             'plugins_loaded',
-            [$this, 'pluginsLoaded']
+            [$this, 'onPluginsLoaded']
         );
     }
 
     /**
-     * Fired when plugins are loaded.
+     * Runs after all plugins are loaded.
      *
      * @return void
      */
-    public function pluginsLoaded(): void
+    public function onPluginsLoaded(): void
     {
         load_plugin_textdomain(
             'ffme',
             false,
             dirname(FFME_PLUGIN_BASENAME) . '/languages'
         );
+
+        // Future:
+        // $this->loader->boot();
     }
 
     /**
@@ -98,7 +99,7 @@ final class Application
      *
      * @return string
      */
-    public function version(): string
+    public function getVersion(): string
     {
         return $this->version;
     }
