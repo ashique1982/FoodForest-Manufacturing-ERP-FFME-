@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace FoodForestERP\Core;
 
-if (!defined('ABSPATH')) {
+use InvalidArgumentException;
+
+if (! defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Simple Service Container.
+ * Service Container.
+ *
+ * Stores and resolves application services.
  *
  * @package FoodForestERP
  * @since 0.2.0
@@ -26,50 +30,62 @@ final class Container
     /**
      * Register a service.
      *
-     * @param string $key
+     * @param string $id
      * @param mixed  $service
      *
      * @return void
      */
-    public function set(string $key, mixed $service): void
+    public function set(string $id, mixed $service): void
     {
-        $this->services[$key] = $service;
+        if ($this->has($id)) {
+            throw new InvalidArgumentException(
+                sprintf('Service "%s" is already registered.', $id)
+            );
+        }
+
+        $this->services[$id] = $service;
     }
 
     /**
      * Get a registered service.
      *
-     * @param string $key
+     * @param string $id
      *
      * @return mixed
      */
-    public function get(string $key): mixed
+    public function get(string $id): mixed
     {
-        return $this->services[$key] ?? null;
+        if (! $this->has($id)) {
+            throw new InvalidArgumentException(
+                sprintf('Service "%s" is not registered.', $id)
+            );
+        }
+
+        return $this->services[$id];
     }
 
     /**
-     * Check whether a service exists.
+     * Determine whether a service exists.
      *
-     * @param string $key
+     * @param string $id
      *
      * @return bool
      */
-    public function has(string $key): bool
+    public function has(string $id): bool
     {
-        return array_key_exists($key, $this->services);
+        return array_key_exists($id, $this->services);
     }
 
     /**
      * Remove a service.
      *
-     * @param string $key
+     * @param string $id
      *
      * @return void
      */
-    public function remove(string $key): void
+    public function remove(string $id): void
     {
-        unset($this->services[$key]);
+        unset($this->services[$id]);
     }
 
     /**
@@ -77,8 +93,18 @@ final class Container
      *
      * @return array<string, mixed>
      */
-    public function all(): array
+    public function services(): array
     {
         return $this->services;
+    }
+
+    /**
+     * Count registered services.
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->services);
     }
 }
