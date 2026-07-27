@@ -15,8 +15,8 @@
 
 declare(strict_types=1);
 
-if (!defined('ABSPATH')) {
-    exit;
+if (! defined('ABSPATH')) {
+	exit;
 }
 
 /*
@@ -26,13 +26,9 @@ if (!defined('ABSPATH')) {
 */
 
 define('FFME_VERSION', '0.2.0');
-
 define('FFME_PLUGIN_FILE', __FILE__);
-
 define('FFME_PLUGIN_DIR', plugin_dir_path(__FILE__));
-
 define('FFME_PLUGIN_URL', plugin_dir_url(__FILE__));
-
 define('FFME_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
 /*
@@ -45,49 +41,46 @@ $autoload = FFME_PLUGIN_DIR . 'vendor/autoload.php';
 
 if (! file_exists($autoload)) {
 
-    add_action('admin_notices', static function (): void {
+	add_action(
+		'admin_notices',
+		static function (): void {
 
-        echo '<div class="notice notice-error"><p>';
-        echo esc_html__(
-            'FoodForest Manufacturing ERP: Composer dependencies are missing. Please run "composer install".',
-            'ffme'
-        );
-        echo '</p></div>';
+			echo '<div class="notice notice-error"><p>';
+			echo esc_html__(
+				'FoodForest Manufacturing ERP requires Composer dependencies. Please run composer install.',
+				'ffme'
+			);
+			echo '</p></div>';
+		}
+	);
 
-    });
-
-    return;
+	return;
 }
 
 require_once $autoload;
 
+use FoodForestERP\Core\Plugin;
+
 /*
 |--------------------------------------------------------------------------
-| Bootstrap Plugin
+| Activation / Deactivation
 |--------------------------------------------------------------------------
 */
 
-use FoodForestERP\Core\Plugin;
+register_activation_hook(
+	__FILE__,
+	[ Plugin::class, 'activate' ]
+);
 
-try {
+register_deactivation_hook(
+	__FILE__,
+	[ Plugin::class, 'deactivate' ]
+);
 
-    Plugin::instance()->boot();
+/*
+|--------------------------------------------------------------------------
+| Boot Plugin
+|--------------------------------------------------------------------------
+*/
 
-} catch (Throwable $e) {
-
-    add_action('admin_notices', static function () use ($e): void {
-
-        echo '<div class="notice notice-error"><p>';
-
-        echo esc_html(
-            sprintf(
-                'FFME Bootstrap Error: %s',
-                $e->getMessage()
-            )
-        );
-
-        echo '</p></div>';
-
-    });
-
-}
+Plugin::instance()->boot();
