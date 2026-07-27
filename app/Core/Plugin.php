@@ -11,7 +11,7 @@ if (! defined('ABSPATH')) {
 /**
  * Main Plugin Kernel.
  *
- * This class coordinates the application's lifecycle.
+ * Coordinates the entire FFME application lifecycle.
  *
  * @package FoodForestERP
  * @since 0.2.0
@@ -19,7 +19,7 @@ if (! defined('ABSPATH')) {
 final class Plugin
 {
     /**
-     * Plugin instance.
+     * Singleton instance.
      *
      * @var Plugin|null
      */
@@ -51,17 +51,17 @@ final class Plugin
      */
     private function __construct()
     {
-        $this->container  = new Container();
-        $this->loader     = new Loader();
+        $this->container   = new Container();
+        $this->loader      = new Loader();
         $this->application = Application::instance();
     }
 
     /**
-     * Get plugin instance.
+     * Get singleton instance.
      *
      * @return Plugin
      */
-    public static function instance(): Plugin
+    public static function instance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -71,17 +71,27 @@ final class Plugin
     }
 
     /**
-     * Boot plugin.
+     * Boot the plugin.
      *
      * @return void
      */
     public function boot(): void
     {
-        $this->application::boot();
+        $this->application->boot();
     }
 
     /**
-     * Get container.
+     * Get the application instance.
+     *
+     * @return Application
+     */
+    public function application(): Application
+    {
+        return $this->application;
+    }
+
+    /**
+     * Get the service container.
      *
      * @return Container
      */
@@ -91,7 +101,7 @@ final class Plugin
     }
 
     /**
-     * Get loader.
+     * Get the module loader.
      *
      * @return Loader
      */
@@ -101,7 +111,7 @@ final class Plugin
     }
 
     /**
-     * Activation callback.
+     * Runs when the plugin is activated.
      *
      * @return void
      */
@@ -111,7 +121,7 @@ final class Plugin
     }
 
     /**
-     * Deactivation callback.
+     * Runs when the plugin is deactivated.
      *
      * @return void
      */
