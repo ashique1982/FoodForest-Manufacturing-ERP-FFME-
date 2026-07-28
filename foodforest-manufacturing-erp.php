@@ -3,7 +3,7 @@
  * Plugin Name: FoodForest Manufacturing ERP
  * Plugin URI:  https://github.com/ashique1982/FoodForest-Manufacturing-ERP-FFME-
  * Description: Professional Manufacturing ERP for WordPress.
- * Version:     0.2.0
+ * Version:     0.3.0
  * Requires at least: 6.7
  * Requires PHP: 8.2
  * Author: FoodForest

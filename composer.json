@@ -3,7 +3,7 @@
     "description": "FoodForest Manufacturing ERP (FFME) - Professional Manufacturing ERP Plugin for WordPress.",
     "type": "wordpress-plugin",
     "license": "proprietary",
-    "version": "0.2.0",
+    "version": "0.4.1",
 
     "authors": [
         {
@@ -41,10 +41,12 @@
 
     "config": {
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
 
     "minimum-stability": "stable",
     "prefer-stable": true
 }
-

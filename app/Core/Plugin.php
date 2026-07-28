@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace FoodForestERP\Core;
 
+use FoodForestERP\Admin\Assets;
+use FoodForestERP\Admin\Menu;
+
 if (! defined('ABSPATH')) {
     exit;
 }
@@ -14,7 +17,7 @@ if (! defined('ABSPATH')) {
  * Coordinates the entire FFME application lifecycle.
  *
  * @package FoodForestERP
- * @since 0.2.0
+ * @since 0.3.0
  */
 final class Plugin
 {
@@ -57,9 +60,9 @@ final class Plugin
     }
 
     /**
-     * Get singleton instance.
+     * Get plugin instance.
      *
-     * @return Plugin
+     * @return self
      */
     public static function instance(): self
     {
@@ -78,10 +81,13 @@ final class Plugin
     public function boot(): void
     {
         $this->application->boot();
+
+        (new Menu())->boot();
+        (new Assets())->boot();
     }
 
     /**
-     * Get the application instance.
+     * Get application instance.
      *
      * @return Application
      */
@@ -91,7 +97,7 @@ final class Plugin
     }
 
     /**
-     * Get the service container.
+     * Get service container.
      *
      * @return Container
      */
@@ -101,7 +107,7 @@ final class Plugin
     }
 
     /**
-     * Get the module loader.
+     * Get module loader.
      *
      * @return Loader
      */
@@ -111,7 +117,7 @@ final class Plugin
     }
 
     /**
-     * Runs when the plugin is activated.
+     * Plugin activation callback.
      *
      * @return void
      */
@@ -121,7 +127,7 @@ final class Plugin
     }
 
     /**
-     * Runs when the plugin is deactivated.
+     * Plugin deactivation callback.
      *
      * @return void
      */
