@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FoodForestERP\Admin;
 
+use FoodForestERP\Contracts\Bootable;
+
 if (! defined('ABSPATH')) {
     exit;
 }
@@ -14,12 +16,12 @@ if (! defined('ABSPATH')) {
  * Loads CSS and JavaScript for FFME admin pages.
  *
  * @package FoodForestERP
- * @since   0.3.0
+ * @since 0.5.0
  */
-final class Assets
+final class Assets implements Bootable
 {
     /**
-     * Register hooks.
+     * Boot admin assets.
      *
      * @return void
      */
@@ -40,6 +42,11 @@ final class Assets
      */
     public function enqueue(string $hook_suffix): void
     {
-        // Assets will be loaded here in future versions.
+        // Only load assets on FFME pages.
+        if (strpos($hook_suffix, 'ffme') === false) {
+            return;
+        }
+
+        // CSS and JS will be registered here in future versions.
     }
 }

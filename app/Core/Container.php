@@ -13,10 +13,10 @@ if (! defined('ABSPATH')) {
 /**
  * Service Container.
  *
- * Stores and resolves application services.
+ * Registers and resolves application services.
  *
  * @package FoodForestERP
- * @since 0.2.0
+ * @since 0.4.2
  */
 final class Container
 {
@@ -33,13 +33,18 @@ final class Container
      * @param string $id
      * @param mixed  $service
      *
+     * @throws InvalidArgumentException
+     *
      * @return void
      */
     public function set(string $id, mixed $service): void
     {
         if ($this->has($id)) {
             throw new InvalidArgumentException(
-                sprintf('Service "%s" is already registered.', $id)
+                sprintf(
+                    'Service "%s" is already registered.',
+                    $id
+                )
             );
         }
 
@@ -51,13 +56,18 @@ final class Container
      *
      * @param string $id
      *
+     * @throws InvalidArgumentException
+     *
      * @return mixed
      */
     public function get(string $id): mixed
     {
         if (! $this->has($id)) {
             throw new InvalidArgumentException(
-                sprintf('Service "%s" is not registered.', $id)
+                sprintf(
+                    'Service "%s" is not registered.',
+                    $id
+                )
             );
         }
 
@@ -77,7 +87,7 @@ final class Container
     }
 
     /**
-     * Remove a service.
+     * Remove a registered service.
      *
      * @param string $id
      *
@@ -86,6 +96,16 @@ final class Container
     public function remove(string $id): void
     {
         unset($this->services[$id]);
+    }
+
+    /**
+     * Remove all registered services.
+     *
+     * @return void
+     */
+    public function clear(): void
+    {
+        $this->services = [];
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FoodForestERP\Core;
 
+use FoodForestERP\Contracts\Bootable;
 use InvalidArgumentException;
 
 if (! defined('ABSPATH')) {
@@ -13,17 +14,17 @@ if (! defined('ABSPATH')) {
 /**
  * Module Loader.
  *
- * Registers and boots FFME modules.
+ * Registers and boots all bootable components.
  *
  * @package FoodForestERP
- * @since 0.2.0
+ * @since 0.4.2
  */
 final class Loader
 {
     /**
-     * Registered modules.
+     * Registered bootable components.
      *
-     * @var array<string, object>
+     * @var array<string, Bootable>
      */
     private array $modules = [];
 
@@ -35,18 +36,23 @@ final class Loader
     private bool $booted = false;
 
     /**
-     * Register a module.
+     * Register a bootable component.
      *
-     * @param string $name
-     * @param object $module
+     * @param string   $name
+     * @param Bootable $module
+     *
+     * @throws InvalidArgumentException
      *
      * @return void
      */
-    public function register(string $name, object $module): void
+    public function register(string $name, Bootable $module): void
     {
         if (isset($this->modules[$name])) {
             throw new InvalidArgumentException(
-                sprintf('Module "%s" is already registered.', $name)
+                sprintf(
+                    'Module "%s" is already registered.',
+                    $name
+                )
             );
         }
 
@@ -54,7 +60,7 @@ final class Loader
     }
 
     /**
-     * Boot all registered modules.
+     * Boot all registered components.
      *
      * @return void
      */
@@ -65,9 +71,7 @@ final class Loader
         }
 
         foreach ($this->modules as $module) {
-            if (method_exists($module, 'boot')) {
-                $module->boot();
-            }
+            $module->boot();
         }
 
         $this->booted = true;
@@ -84,9 +88,9 @@ final class Loader
     }
 
     /**
-     * Get all registered modules.
+     * Get all registered components.
      *
-     * @return array<string, object>
+     * @return array<string, Bootable>
      */
     public function modules(): array
     {
@@ -94,7 +98,31 @@ final class Loader
     }
 
     /**
-     * Count registered modules.
+     * Get a registered component.
+     *
+     * @param string $name
+     *
+     * @return Bootable|null
+     */
+    public function get(string $name): ?Bootable
+    {
+        return $this->modules[$name] ?? null;
+    }
+
+    /**
+     * Determine whether a component exists.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool
+    {
+        return isset($this->modules[$name]);
+    }
+
+    /**
+     * Count registered components.
      *
      * @return int
      */

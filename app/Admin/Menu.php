@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FoodForestERP\Admin;
 
+use FoodForestERP\Contracts\Bootable;
+
 if (! defined('ABSPATH')) {
     exit;
 }
@@ -14,12 +16,12 @@ if (! defined('ABSPATH')) {
  * Registers the FFME admin menu.
  *
  * @package FoodForestERP
- * @since   0.3.0
+ * @since 0.5.0
  */
-final class Menu
+final class Menu implements Bootable
 {
     /**
-     * Register hooks.
+     * Boot the admin menu.
      *
      * @return void
      */

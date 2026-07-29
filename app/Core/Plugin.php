@@ -6,6 +6,9 @@ namespace FoodForestERP\Core;
 
 use FoodForestERP\Admin\Assets;
 use FoodForestERP\Admin\Menu;
+use FoodForestERP\Contracts\Bootable;
+use FoodForestERP\Database\Migrator;
+use FoodForestERP\Database\Migrations\CreateCompaniesTable;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -14,19 +17,19 @@ if (! defined('ABSPATH')) {
 /**
  * Main Plugin Kernel.
  *
- * Coordinates the entire FFME application lifecycle.
+ * Coordinates the complete FFME application lifecycle.
  *
  * @package FoodForestERP
- * @since 0.3.0
+ * @since 0.5.0
  */
-final class Plugin
+final class Plugin implements Bootable
 {
     /**
      * Singleton instance.
      *
-     * @var Plugin|null
+     * @var self|null
      */
-    private static ?Plugin $instance = null;
+    private static ?self $instance = null;
 
     /**
      * Application instance.
@@ -54,9 +57,9 @@ final class Plugin
      */
     private function __construct()
     {
+        $this->application = Application::instance();
         $this->container   = new Container();
         $this->loader      = new Loader();
-        $this->application = Application::instance();
     }
 
     /**
@@ -82,8 +85,27 @@ final class Plugin
     {
         $this->application->boot();
 
-        (new Menu())->boot();
-        (new Assets())->boot();
+        $this->registerModules();
+
+        $this->loader->boot();
+    }
+
+    /**
+     * Register plugin modules.
+     *
+     * @return void
+     */
+    private function registerModules(): void
+    {
+        $this->loader->register(
+            'admin.menu',
+            new Menu()
+        );
+
+        $this->loader->register(
+            'admin.assets',
+            new Assets()
+        );
     }
 
     /**
@@ -123,6 +145,14 @@ final class Plugin
      */
     public static function activate(): void
     {
+        $migrator = new Migrator();
+
+        $migrator->register(
+            new CreateCompaniesTable()
+        );
+
+        $migrator->run();
+
         flush_rewrite_rules();
     }
 
