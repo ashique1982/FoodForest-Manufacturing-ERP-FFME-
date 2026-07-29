@@ -9,6 +9,10 @@ use FoodForestERP\Admin\Menu;
 use FoodForestERP\Contracts\Bootable;
 use FoodForestERP\Database\Migrator;
 use FoodForestERP\Database\Migrations\CreateCompaniesTable;
+use FoodForestERP\Modules\Company\Models\CompanyModel;
+use FoodForestERP\Modules\Company\CompanyService;
+use FoodForestERP\Modules\Company\Controllers\CompanyController;
+use FoodForestERP\Modules\Company\Controllers\CompanyProfileController;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -17,10 +21,10 @@ if (! defined('ABSPATH')) {
 /**
  * Main Plugin Kernel.
  *
- * Coordinates the complete FFME application lifecycle.
+ * Coordinates FFME application lifecycle.
  *
  * @package FoodForestERP
- * @since 0.5.0
+ * @since 0.8.0
  */
 final class Plugin implements Bootable
 {
@@ -31,6 +35,7 @@ final class Plugin implements Bootable
      */
     private static ?self $instance = null;
 
+
     /**
      * Application instance.
      *
@@ -38,29 +43,35 @@ final class Plugin implements Bootable
      */
     private Application $application;
 
+
     /**
-     * Service container.
+     * Container instance.
      *
      * @var Container
      */
     private Container $container;
 
+
     /**
-     * Module loader.
+     * Loader instance.
      *
      * @var Loader
      */
     private Loader $loader;
 
+
     /**
-     * Private constructor.
+     * Constructor.
      */
     private function __construct()
     {
         $this->application = Application::instance();
-        $this->container   = new Container();
-        $this->loader      = new Loader();
+
+        $this->container = new Container();
+
+        $this->loader = new Loader();
     }
+
 
     /**
      * Get plugin instance.
@@ -70,14 +81,17 @@ final class Plugin implements Bootable
     public static function instance(): self
     {
         if (self::$instance === null) {
+
             self::$instance = new self();
+
         }
 
         return self::$instance;
     }
 
+
     /**
-     * Boot the plugin.
+     * Boot plugin.
      *
      * @return void
      */
@@ -85,31 +99,101 @@ final class Plugin implements Bootable
     {
         $this->application->boot();
 
+        $this->registerServices();
+
         $this->registerModules();
 
         $this->loader->boot();
     }
 
+
     /**
-     * Register plugin modules.
+     * Register services.
+     *
+     * @return void
+     */
+    private function registerServices(): void
+    {
+        $companyModel = new CompanyModel();
+
+
+        $companyService = new CompanyService(
+            $companyModel
+        );
+
+
+        $this->container->set(
+            'company.service',
+            $companyService
+        );
+    }
+
+
+    /**
+     * Register modules.
      *
      * @return void
      */
     private function registerModules(): void
     {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Admin
+        |--------------------------------------------------------------------------
+        */
+
         $this->loader->register(
             'admin.menu',
             new Menu()
         );
 
+
         $this->loader->register(
             'admin.assets',
             new Assets()
         );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Company Module
+        |--------------------------------------------------------------------------
+        */
+
+
+        $companyService = $this->container->get(
+            'company.service'
+        );
+
+
+        $this->loader->register(
+            'company.controller',
+            new CompanyController(
+                $companyService
+            )
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Company Profile Module
+        |--------------------------------------------------------------------------
+        */
+
+
+        $this->loader->register(
+            'company.profile.controller',
+            new CompanyProfileController(
+                $companyService
+            )
+        );
+
     }
 
+
     /**
-     * Get application instance.
+     * Get application.
      *
      * @return Application
      */
@@ -118,8 +202,9 @@ final class Plugin implements Bootable
         return $this->application;
     }
 
+
     /**
-     * Get service container.
+     * Get container.
      *
      * @return Container
      */
@@ -128,8 +213,9 @@ final class Plugin implements Bootable
         return $this->container;
     }
 
+
     /**
-     * Get module loader.
+     * Get loader.
      *
      * @return Loader
      */
@@ -138,8 +224,9 @@ final class Plugin implements Bootable
         return $this->loader;
     }
 
+
     /**
-     * Plugin activation callback.
+     * Plugin activation.
      *
      * @return void
      */
@@ -147,17 +234,21 @@ final class Plugin implements Bootable
     {
         $migrator = new Migrator();
 
+
         $migrator->register(
             new CreateCompaniesTable()
         );
 
+
         $migrator->run();
+
 
         flush_rewrite_rules();
     }
 
+
     /**
-     * Plugin deactivation callback.
+     * Plugin deactivation.
      *
      * @return void
      */
