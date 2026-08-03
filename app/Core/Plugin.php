@@ -9,6 +9,7 @@ use FoodForestERP\Admin\Menu;
 use FoodForestERP\Contracts\Bootable;
 use FoodForestERP\Database\Migrator;
 use FoodForestERP\Database\Migrations\CreateCompaniesTable;
+use FoodForestERP\Database\Migrations\AddCompanyProfileFields;
 use FoodForestERP\Modules\Company\Models\CompanyModel;
 use FoodForestERP\Modules\Company\CompanyService;
 use FoodForestERP\Modules\Company\Controllers\CompanyController;
@@ -28,35 +29,15 @@ if (! defined('ABSPATH')) {
  */
 final class Plugin implements Bootable
 {
-    /**
-     * Singleton instance.
-     *
-     * @var self|null
-     */
     private static ?self $instance = null;
 
 
-    /**
-     * Application instance.
-     *
-     * @var Application
-     */
     private Application $application;
 
 
-    /**
-     * Container instance.
-     *
-     * @var Container
-     */
     private Container $container;
 
 
-    /**
-     * Loader instance.
-     *
-     * @var Loader
-     */
     private Loader $loader;
 
 
@@ -74,7 +55,7 @@ final class Plugin implements Bootable
 
 
     /**
-     * Get plugin instance.
+     * Get instance.
      *
      * @return self
      */
@@ -142,6 +123,7 @@ final class Plugin implements Bootable
         | Admin
         |--------------------------------------------------------------------------
         */
+
 
         $this->loader->register(
             'admin.menu',
@@ -235,8 +217,27 @@ final class Plugin implements Bootable
         $migrator = new Migrator();
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Core Tables
+        |--------------------------------------------------------------------------
+        */
+
+
         $migrator->register(
             new CreateCompaniesTable()
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Company Profile Fields
+        |--------------------------------------------------------------------------
+        */
+
+
+        $migrator->register(
+            new AddCompanyProfileFields()
         );
 
 

@@ -1,0 +1,324 @@
+/**
+ * FFME Company Profile Styles
+ *
+ * @package FoodForestERP
+ */
+
+
+/* Main Wrapper */
+
+.ffme-company-profile {
+    max-width: 1200px;
+}
+
+
+
+/* Cover Banner */
+
+.ffme-profile-cover {
+
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f1f1f1;
+}
+
+
+.ffme-cover-image {
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+
+.ffme-cover-placeholder {
+
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #777;
+
+}
+
+
+
+/* Profile Header */
+
+.ffme-profile-header {
+
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-top: -70px;
+    padding: 0 30px;
+    position: relative;
+
+}
+
+
+
+.ffme-company-logo {
+
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 6px solid #fff;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,.15);
+
+}
+
+
+.ffme-company-logo img {
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+
+
+.ffme-logo-placeholder {
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    font-size:55px;
+    font-weight:bold;
+
+}
+
+
+
+/* Company Information */
+
+
+.ffme-company-info h1 {
+
+    margin:0;
+    font-size:32px;
+
+}
+
+
+
+.ffme-company-info .description {
+
+    margin-top:8px;
+    color:#666;
+
+}
+
+
+
+/* Badges */
+
+.ffme-profile-badges {
+
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+
+}
+
+
+
+.ffme-badge {
+
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+
+}
+
+
+.ffme-badge.success {
+
+    background:#d1fae5;
+    color:#065f46;
+
+}
+
+
+
+.ffme-badge.danger {
+
+    background:#fee2e2;
+    color:#991b1b;
+
+}
+
+
+
+.ffme-badge.verified {
+
+    background:#dbeafe;
+    color:#1d4ed8;
+
+}
+
+
+
+/* Summary Cards */
+
+
+.ffme-profile-summary {
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-top:40px;
+
+}
+
+
+
+.ffme-card {
+
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+}
+
+
+
+.ffme-card strong {
+
+    font-size:14px;
+    color:#555;
+
+}
+
+
+
+.ffme-card span {
+
+    font-size:18px;
+    font-weight:600;
+
+}
+
+
+
+/* Tabs */
+
+
+.ffme-profile-tabs {
+
+    margin-top:30px;
+    display:flex;
+    gap:5px;
+    overflow-x:auto;
+    border-bottom:1px solid #ddd;
+
+}
+
+
+
+.ffme-profile-tabs a {
+
+    padding:12px 18px;
+    text-decoration:none;
+    color:#555;
+    white-space:nowrap;
+    font-weight:500;
+
+}
+
+
+
+.ffme-profile-tabs a.active {
+
+    color:#2271b1;
+    border-bottom:3px solid #2271b1;
+
+}
+
+
+
+/* Content */
+
+
+.ffme-profile-content {
+
+    margin-top:25px;
+
+}
+
+
+
+/* Mobile Responsive */
+
+
+@media screen and (max-width:768px) {
+
+
+    .ffme-profile-cover {
+
+        height:180px;
+
+    }
+
+
+    .ffme-profile-header {
+
+        flex-direction:column;
+        text-align:center;
+        margin-top:-60px;
+        padding:0 10px;
+
+    }
+
+
+    .ffme-company-logo {
+
+        width:120px;
+        height:120px;
+
+    }
+
+
+    .ffme-company-info h1 {
+
+        font-size:24px;
+
+    }
+
+
+    .ffme-profile-summary {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+    .ffme-profile-tabs {
+
+        padding-bottom:5px;
+
+    }
+
+
+    .ffme-profile-tabs a {
+
+        padding:10px 14px;
+        font-size:14px;
+
+    }
+
+}

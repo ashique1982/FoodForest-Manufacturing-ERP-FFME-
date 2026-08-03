@@ -28,6 +28,7 @@ final class CompanyProfileController implements Bootable
      */
     private CompanyService $service;
 
+
     /**
      * Constructor.
      *
@@ -38,6 +39,7 @@ final class CompanyProfileController implements Bootable
     ) {
         $this->service = $service;
     }
+
 
     /**
      * Boot controller.
@@ -52,17 +54,16 @@ final class CompanyProfileController implements Bootable
         );
     }
 
+
     /**
-     * Register profile page.
-     *
-     * Hidden page.
+     * Register company profile page.
      *
      * @return void
      */
     public function registerMenu(): void
     {
         add_submenu_page(
-            null,
+            'ffme',
             __('Company Profile', 'ffme'),
             __('Company Profile', 'ffme'),
             'manage_options',
@@ -71,49 +72,64 @@ final class CompanyProfileController implements Bootable
         );
     }
 
+
     /**
-     * Company profile page.
+     * Display company profile.
      *
      * @return void
      */
     public function profile(): void
     {
         if (! current_user_can('manage_options')) {
+
             wp_die(
                 esc_html__(
                     'Permission denied.',
                     'ffme'
                 )
             );
+
         }
+
 
         $id = absint(
             $_GET['id'] ?? 0
         );
 
+
         if ($id <= 0) {
+
             wp_die(
                 esc_html__(
                     'Invalid company.',
                     'ffme'
                 )
             );
+
         }
 
-        $company = $this->service->get($id);
 
-        if ($company === null) {
+        $company = $this->service->get(
+            $id
+        );
+
+
+        if (! $company) {
+
             wp_die(
                 esc_html__(
                     'Company not found.',
                     'ffme'
                 )
             );
+
         }
+
 
         $tab = sanitize_key(
             $_GET['tab'] ?? 'general'
         );
+
 
         $allowedTabs = [
             'general',
@@ -125,11 +141,21 @@ final class CompanyProfileController implements Bootable
             'settings',
         ];
 
-        if (! in_array($tab, $allowedTabs, true)) {
+
+        if (
+            ! in_array(
+                $tab,
+                $allowedTabs,
+                true
+            )
+        ) {
+
             $tab = 'general';
+
         }
 
+
         include FFME_PLUGIN_DIR .
-'app/Modules/Company/Views/company-profile/index.php';
+            'app/Modules/Company/Views/company-profile/index.php';
     }
 }
